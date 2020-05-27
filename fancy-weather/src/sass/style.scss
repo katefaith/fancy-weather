@@ -1,0 +1,29 @@
+@import "global/normalize";
+@import "mixins.scss";
+
+@import "blocks/header";
+@import "blocks/radio-group";
+@import "blocks/controls";
+@import "blocks/search";
+@import "blocks/main";
+@import "blocks/weather";
+@import "blocks/weather-today";
+@import "blocks/weather-forecast";
+@import "blocks/map";
+
+html {
+  font-family: Tahoma, Verdana, sans-serif;
+  line-height: 1.5;
+  font-size: 10px;
+}
+
+body {
+  background: linear-gradient(rgba($color: black, $alpha: 0.6), rgba($color: black, $alpha: 0.7)) fixed,
+              url("https://live.staticflickr.com/65535/49934742896_e9a15e54a9_h.jpg") center / cover fixed;
+  font-size: 2rem;
+  color: white;
+
+  @media (max-width: 768px) {
+    font-size: 1.6rem;
+  }
+}

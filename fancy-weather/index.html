@@ -1,12 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fancy Weather</title>
-  <link rel="icon" href="./img/favico.png">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fancy Weather</title>
+    <link rel="icon" href="./img/favico.png" />
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=cf24b0eb-e2d7-4e48-8fef-e9d655090e0d&lang=ru_RU" type="text/javascript">
+    </script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="controls">
+        <div class="controls__bg-update">
+          <img src="./src/img/update.png" />
+        </div>
 
-</body>
+        <div class="controls__lang radio-group">
+          <div class="radio-group__item">
+            <input id="en" type="radio" name="lang" value="en" checked />
+            <label for="en">en</label>
+          </div>
+          <div class="radio-group__item">
+            <input id="ru" type="radio" name="lang" value="ru" />
+            <label for="ru">ru</label>
+          </div>
+          <div class="radio-group__item">
+            <input id="be" type="radio" name="lang" value="be" />
+            <label for="be">be</label>
+          </div>
+        </div>
+
+        <div class="controls__temperature radio-group">
+          <div class="radio-group__item">
+            <input
+              id="сelsius"
+              type="radio"
+              name="temperature"
+              value="°C"
+              checked
+            />
+            <label for="сelsius">°C</label>
+          </div>
+          <div class="radio-group__item">
+            <input id="fahrenheit" type="radio" name="temperature" value="°F" />
+            <label for="fahrenheit">°F</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="search">
+        <form class="search__form">
+          <input class="search__input" placeholder="Search city" required />
+          <button class="search__button">Search</button>
+        </form>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="weather">
+        <h1 class="weather__city">Moscow, Russia</h1>
+
+        <div class="weather-today">
+          <h2 class="weather-today__period">
+            <span class="weather-today__date">Wed 27 May</span>
+            <span class="weather-today__time">17:23:12</span>
+          </h2>
+          <div class="weather-today__basic">
+            <img class="weather-today__icon" src="./src/img/weather-icons/cloudy-night-2.svg" />
+            <div class="weather-today__temperature"><span>+14°</span></div>
+            <div class="weather-today__descr">
+              <div class="weather-today__summary">Clouds</div>
+              <div class="weather-today__feels-like">Feels like: +10°</div>
+            </div>
+          </div>
+          <div class="weather-today__aditional">
+            <div class="weather-today__wind">Wind: 10 m/s</div>
+            <div class="weather-today__humidity">Humidity: 67%</div>
+          </div>
+        </div>
+
+        <div class="weather-forecast">
+          <div class="weather-forecast__day">
+            <h2 class="weather-forecast__weekday">Thursday</h2>
+            <div class="weather-forecast__date">28 May</div>
+            <div class="weather-forecast__wrapper">
+              <img class="weather-forecast__icon" src="./src/img/weather-icons/cloudy-day-1.svg" />
+              <div class="weather-forecast__descr">
+                <div class="weather-forecast__summary">Rainy</div>
+                <div class="weather-forecast__temperature">+12°</div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="weather-forecast__day">
+            <h2 class="weather-forecast__weekday">Thursday</h2>
+            <div class="weather-forecast__date">28 May</div>
+            <div class="weather-forecast__wrapper">
+              <img class="weather-forecast__icon" src="./src/img/weather-icons/cloudy-day-1.svg" />
+              <div class="weather-forecast__descr">
+                <div class="weather-forecast__summary">Rainy</div>
+                <div class="weather-forecast__temperature">+12°</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="weather-forecast__day">
+            <h2 class="weather-forecast__weekday">Thursday</h2>
+            <div class="weather-forecast__date">28 May</div>
+            <div class="weather-forecast__wrapper">
+              <img class="weather-forecast__icon" src="./src/img/weather-icons/cloudy-day-1.svg" />
+              <div class="weather-forecast__descr">
+                <div class="weather-forecast__summary">Rainy</div>
+                <div class="weather-forecast__temperature">+12°</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="map">
+        <div class="map__coordinates">
+          <div class="map__latitude">Latitude: 55° 45' 0.66636'' N</div>
+          <div class="map__longitude">Longitude: 37° 37' 4.28088'' E</div>
+        </div>
+        <div class="map__scheme" id="map"></div>
+      </div>
+    </main>
+  </body>
 </html>

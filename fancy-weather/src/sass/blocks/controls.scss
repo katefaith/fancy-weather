@@ -1,0 +1,35 @@
+.controls {
+  display: flex;
+
+  @media (max-width: 768px) {
+    order: 1;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+.controls__bg-update {
+  @include button;
+  padding: 10px;
+  margin-right: 20px;
+  border-radius: 6px;
+
+  img {
+    display: block;
+    width: 25px;
+    height: 25px;
+  }
+}
+
+.controls__lang {
+  margin-right: 20px;
+}
+
+.controls__bg-update,
+.controls__lang,
+.controls__temperature {
+
+  @media (max-width: 768px) {
+    margin-bottom: 20px;
+  }
+}

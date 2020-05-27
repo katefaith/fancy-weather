@@ -1,0 +1,35 @@
+.weather-forecast {
+  display: flex;
+  justify-content: space-between;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+}
+
+.weather-forecast__day {
+  flex-basis: 30%;
+  text-align: center;
+
+  @media (max-width: 600px) {
+    margin-bottom: 30px;
+  }
+}
+
+.weather-forecast__weekday {
+  margin: 0px 0;
+}
+
+.weather-forecast__wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.weather-forecast__icon {
+  width: 100px;
+}
+
+.weather-forecast__descr {
+  font-size: 1.8rem;
+}

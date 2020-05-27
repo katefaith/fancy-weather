@@ -1,0 +1,19 @@
+.weather {
+  width: 60%;
+  flex-shrink: 1;
+
+  @media (max-width: 1200px) {
+    width: 100%;
+    margin-bottom: 40px;
+  }
+
+  @media (max-width: 600px) {
+    margin-bottom: 0;
+  }
+}
+
+.weather__city {
+  text-align: center;
+  margin: 0;
+}
+
