@@ -1,56 +1,42 @@
-export default function createMap(/* coordinates */) { // [55.76, 37.64]
-  /* eslint-disable */
+function getCurrentCoordinates() {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition((pos) => resolve([pos.coords.latitude,
+      pos.coords.longitude]), (err) => reject(err));
+  });
+}
+
+export default async function createMap() {
+  const currentCoordinates = await getCurrentCoordinates();
+
+  // eslint-disable-next-line no-undef
   const myMap = new ymaps.Map('map', {
-    center: [55.76, 37.64],
+    center: currentCoordinates,
     zoom: 10,
   }, {
     searchControlProvider: 'yandex#search',
   });
-  /* eslint-enable */
 
-  /* eslint-disable */
-  const location = ymaps.geolocation;
-  /* eslint-enable */
-
-  location.get({
-    mapStateAutoApply: true,
-  })
-    .then(
-      (result) => {
-        // Получение местоположения пользователя.
-        // const userAddress = result.geoObjects.get(0).properties.get('text');
-        const userCoodinates = result.geoObjects.get(0).geometry.getCoordinates();
-
-        // Добавление метки
-        /* eslint-disable */
-        const myPlacemark = new ymaps.Placemark(userCoodinates, {
-          // balloonContentBody: userAddress
-        });
-        /* eslint-enable */
-        myMap.geoObjects.add(myPlacemark);
-
-        // Перемещение центра карты в точку с новыми координатами
-        myMap.setCenter(userCoodinates, 10);
-      },
-      (err) => {
-        console.log(`Ошибка: ${err}`);
-      },
-    );
+  // eslint-disable-next-line no-undef
+  const myPlacemark = new ymaps.Placemark(currentCoordinates, {
+    // balloonContentBody: userAddress
+  });
+  myMap.geoObjects.add(myPlacemark);
 
   // const searchButton = document.querySelector('.searchButton');
   // if (searchButton) {
-  //   searchButton.onclick = function () {
+  //   searchButton.onclick = () => {
+  //     const coordinates = [55.76, 37.64]; // Москва
 
   //     myMap.geoObjects.removeAll();
-  //     var myPlacemark = new ymaps.Placemark(coordinates, {
+  //     // eslint-disable-next-line no-undef
+  //     myPlacemark = new ymaps.Placemark(coordinates, {
   //       // balloonContentBody: userAddress
   //     });
   //     myMap.geoObjects.add(myPlacemark);
 
-  //     // Плавное перемещение центра карты в точку с новыми координатами
   //     myMap.panTo(coordinates, {
-  //       delay: 1500
+  //       delay: 1500,
   //     });
-  //   }
+  //   };
   // }
 }
