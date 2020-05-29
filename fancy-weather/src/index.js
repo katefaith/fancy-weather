@@ -1,5 +1,10 @@
 import { createMap, getCurrentCoordinates } from './js/map';
-import { getCurrentWeather, showCurrentWeather } from './js/currentWeather';
+import {
+  getCurrentWeather,
+  showCurrentWeather,
+  getForecast,
+  showForecast,
+} from './js/weather';
 
 document.addEventListener('DOMContentLoaded', async () => {
   // eslint-disable-next-line no-undef
@@ -9,8 +14,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   try {
     const currentCoordinates = await getCurrentCoordinates();
+    // console.log(currentCoordinates);
     const currentWeather = await getCurrentWeather(currentCoordinates);
+    const forecast = await getForecast(currentCoordinates);
+
     showCurrentWeather(currentWeather);
+    showForecast(forecast);
   } catch (error) {
     console.log(error);
   }

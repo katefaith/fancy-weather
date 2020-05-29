@@ -34,3 +34,27 @@ export function showCurrentWeather(weatherObj) {
   const humidity = document.querySelector('.weather-today__humidity span');
   humidity.textContent = weatherObj.rh;
 }
+
+export async function getForecast(coordinates) {
+  const [latitude, longitude] = coordinates;
+  const url = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${latitude}&lon=${longitude}&days=3&lang=en&key=${weatherbitApiKey}`;
+
+  const forecast = await fetchData(url);
+  return forecast;
+}
+
+export function showForecast(forecastObj) {
+  // const weekdays = document.querySelectorAll('.weather-forecast__weekday');
+  const dates = document.querySelectorAll('.weather-forecast__date');
+  const icons = document.querySelectorAll('.weather-forecast__icon');
+  const summaries = document.querySelectorAll('.weather-forecast__summary');
+  const temperatures = document.querySelectorAll('.weather-forecast__temperature span');
+
+  forecastObj.data.forEach((day, index) => {
+    // поменять иконки
+    dates[index].textContent = day.datetime;
+    icons[index].setAttribute('alt', day.weather.icon);
+    summaries[index].textContent = day.weather.description;
+    temperatures[index].textContent = (Math.round(day.temp) > 0) ? `+${Math.round(day.temp)}` : Math.round(day.temp);
+  });
+}
