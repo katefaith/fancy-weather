@@ -1,21 +1,23 @@
 import {
-  createMap,
-  getCurrentCoordinates,
-} from './js/map';
-import {
   getCurrentWeather,
   showCurrentWeather,
   getForecast,
   showForecast,
 } from './js/weather';
-import { geocodeByCityName, geocodeByCoordinates } from './js/geocode';
+import {
+  geocodeByCityName,
+  geocodeByCoordinates,
+} from './js/geocode';
+import { mapboxAccessToken } from './js/apiKeys';
+
+function getCurrentCoordinates() {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition((pos) => resolve([pos.coords.latitude,
+      pos.coords.longitude]), (err) => reject(err));
+  });
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // eslint-disable-next-line no-undef
-  ymaps.ready(() => {
-    createMap();
-  });
-
   try {
     const currentCoordinates = await getCurrentCoordinates();
     let geocode = await geocodeByCoordinates(currentCoordinates);
@@ -52,7 +54,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     showCurrentWeather(currentWeather);
     showForecast(forecast);
 
-    document.querySelector('.main').setAttribute('style', 'display: flex;');
+    // eslint-disable-next-line no-undef
+    mapboxgl.accessToken = mapboxAccessToken;
+    // eslint-disable-next-line no-undef
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [currentCoordinates[1], currentCoordinates[0]],
+      zoom: 10,
+    });
+    // eslint-disable-next-line no-undef
+    let marker = new mapboxgl.Marker()
+      .setLngLat([currentCoordinates[1], currentCoordinates[0]])
+      .addTo(map);
 
     const formSearch = document.querySelector('.search__form');
     formSearch.addEventListener('submit', async (e) => {
@@ -95,6 +109,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       showCurrentWeather(currentWeather);
       showForecast(forecast);
+
+      marker.remove();
+      // eslint-disable-next-line no-undef
+      marker = new mapboxgl.Marker()
+        .setLngLat([lng, lat])
+        .addTo(map);
+      map.flyTo({
+        center: [lng, lat],
+        essential: true,
+      });
     });
   } catch (error) {
     console.log(error);
