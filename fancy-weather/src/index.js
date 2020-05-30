@@ -23,4 +23,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
     console.log(error);
   }
+
+  // const formSearch = document.querySelector('.search__form');
+  // formSearch.addEventListener('submit', (e) => {
+  //   e.preventDefault();
+  //   console.log('submit');
+  // });
 });

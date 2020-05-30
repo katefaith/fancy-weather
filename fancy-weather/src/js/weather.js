@@ -37,24 +37,39 @@ export function showCurrentWeather(weatherObj) {
 
 export async function getForecast(coordinates) {
   const [latitude, longitude] = coordinates;
-  const url = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${latitude}&lon=${longitude}&days=3&lang=en&key=${weatherbitApiKey}`;
+  const url = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${latitude}&lon=${longitude}&days=4&lang=en&key=${weatherbitApiKey}`;
 
   const forecast = await fetchData(url);
   return forecast;
 }
 
 export function showForecast(forecastObj) {
-  // const weekdays = document.querySelectorAll('.weather-forecast__weekday');
-  const dates = document.querySelectorAll('.weather-forecast__date');
+  const weekdays = document.querySelectorAll('.weather-forecast__weekday');
+  // const dates = document.querySelectorAll('.weather-forecast__date');
   const icons = document.querySelectorAll('.weather-forecast__icon');
   const summaries = document.querySelectorAll('.weather-forecast__summary');
   const temperatures = document.querySelectorAll('.weather-forecast__temperature span');
 
   forecastObj.data.forEach((day, index) => {
-    // поменять иконки
-    dates[index].textContent = day.datetime;
-    icons[index].setAttribute('alt', day.weather.icon);
-    summaries[index].textContent = day.weather.description;
-    temperatures[index].textContent = (Math.round(day.temp) > 0) ? `+${Math.round(day.temp)}` : Math.round(day.temp);
+    if (index > 0) {
+      const weekday = new Date(day.ts * 1000).toLocaleString('en', {
+        weekday: 'long',
+        timezone: `${forecastObj.timezone}`,
+      });
+      weekdays[index - 1].textContent = weekday;
+
+      // вывод даты
+      // <div class="weather-forecast__date">28 May</div>
+      // const date = new Date(day.ts * 1000).toLocaleString('en', {
+      //   month: 'long',
+      //   day: 'numeric',
+      // });
+      // dates[index - 1].textContent = date;
+
+      // поменять иконки
+      icons[index - 1].setAttribute('alt', day.weather.icon);
+      summaries[index - 1].textContent = day.weather.description;
+      temperatures[index - 1].textContent = (Math.round(day.temp) > 0) ? `+${Math.round(day.temp)}` : Math.round(day.temp);
+    }
   });
 }
