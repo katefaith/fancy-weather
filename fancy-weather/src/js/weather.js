@@ -1,6 +1,6 @@
-import weatherbitApiKey from './apiKeys';
+import { weatherbitApiKey } from './apiKeys';
 
-function fetchData(url) {
+export function fetchData(url) {
   return fetch(url)
     .then((response) => response.json())
     .catch((error) => console.log(error));
@@ -45,7 +45,6 @@ export async function getForecast(coordinates) {
 
 export function showForecast(forecastObj) {
   const weekdays = document.querySelectorAll('.weather-forecast__weekday');
-  // const dates = document.querySelectorAll('.weather-forecast__date');
   const icons = document.querySelectorAll('.weather-forecast__icon');
   const summaries = document.querySelectorAll('.weather-forecast__summary');
   const temperatures = document.querySelectorAll('.weather-forecast__temperature span');
@@ -57,14 +56,6 @@ export function showForecast(forecastObj) {
         timezone: `${forecastObj.timezone}`,
       });
       weekdays[index - 1].textContent = weekday;
-
-      // вывод даты
-      // <div class="weather-forecast__date">28 May</div>
-      // const date = new Date(day.ts * 1000).toLocaleString('en', {
-      //   month: 'long',
-      //   day: 'numeric',
-      // });
-      // dates[index - 1].textContent = date;
 
       // поменять иконки
       icons[index - 1].setAttribute('alt', day.weather.icon);
