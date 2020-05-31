@@ -43,14 +43,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, 1000);
 
     let dmsCoordinates = geocode.results[0].annotations.DMS;
-    let latitude = document.querySelector('.map__latitude span');
+    const latitude = document.querySelector('.map__latitude span');
     latitude.textContent = dmsCoordinates.lat;
-    let longitude = document.querySelector('.map__longitude span');
+    const longitude = document.querySelector('.map__longitude span');
     longitude.textContent = dmsCoordinates.lng;
 
-    let humanSettlement = geocode.results[0].formatted;
-    let city = document.querySelector('.weather__city');
-    city.textContent = humanSettlement;
+    const city = document.querySelector('.weather__city');
+
+    let { components } = geocode.results[0];
+    console.log(components);
+    let name = components.city
+    || components.town
+    || components.village
+    || components.county
+    // || components.state_district
+    || components.hamlet;
+    city.textContent = `${name}, ${components.country || components.continent}`;
 
     showCurrentWeather(currentWeather);
     showForecast(forecast);
@@ -98,14 +106,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       }, 1000);
 
       dmsCoordinates = geocode.results[0].annotations.DMS;
-      latitude = document.querySelector('.map__latitude span');
+      // latitude = document.querySelector('.map__latitude span');
       latitude.textContent = dmsCoordinates.lat;
-      longitude = document.querySelector('.map__longitude span');
+      // longitude = document.querySelector('.map__longitude span');
       longitude.textContent = dmsCoordinates.lng;
 
-      humanSettlement = geocode.results[0].formatted;
-      city = document.querySelector('.weather__city');
-      city.textContent = humanSettlement;
+      components = geocode.results[0].components;
+      name = components.city
+      || components.town
+      || components.village
+      || components.county
+      // || components.state_district
+      || components.hamlet;
+      city.textContent = `${name}, ${components.country || components.continent}`;
+      console.log(geocode.results[0].components);
 
       showCurrentWeather(currentWeather);
       showForecast(forecast);
