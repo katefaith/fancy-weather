@@ -12,6 +12,11 @@ import {
 
 import { mapboxAccessToken } from './js/apiKeys';
 
+import {
+  closeErrorPopup,
+  showErrorPopup,
+} from './js/errors';
+
 function getCurrentCoordinates() {
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition((pos) => resolve([pos.coords.latitude,
@@ -20,70 +25,74 @@ function getCurrentCoordinates() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const currentCoordinates = await getCurrentCoordinates();
-    let geocode = await geocodeByCoordinates(currentCoordinates);
+  const popupCloseButton = document.querySelector('.popup__close-button');
+  popupCloseButton.addEventListener('click', closeErrorPopup);
 
-    let currentWeather = await getCurrentWeather(currentCoordinates);
-    let forecast = await getForecast(currentCoordinates);
+  const currentCoordinates = await getCurrentCoordinates();
+  let geocode = await geocodeByCoordinates(currentCoordinates);
 
-    let timezone = geocode.results[0].annotations.timezone.name;
-    let dateBlock = document.querySelector('.weather-today__period');
-    let timerId = setInterval(() => {
-      const date = new Date().toLocaleString('en', {
-        month: 'long',
-        day: 'numeric',
-        weekday: 'short',
-        timeZone: timezone,
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-      });
-      dateBlock.innerHTML = date;
-    }, 1000);
+  let currentWeather = await getCurrentWeather(currentCoordinates);
+  let forecast = await getForecast(currentCoordinates);
 
-    let dmsCoordinates = geocode.results[0].annotations.DMS;
-    const latitude = document.querySelector('.map__latitude span');
-    latitude.textContent = dmsCoordinates.lat;
-    const longitude = document.querySelector('.map__longitude span');
-    longitude.textContent = dmsCoordinates.lng;
+  let timezone = geocode.results[0].annotations.timezone.name;
+  let dateBlock = document.querySelector('.weather-today__period');
+  let timerId = setInterval(() => {
+    const date = new Date().toLocaleString('en', {
+      month: 'long',
+      day: 'numeric',
+      weekday: 'short',
+      timeZone: timezone,
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+    });
+    dateBlock.innerHTML = date;
+  }, 1000);
 
-    const city = document.querySelector('.weather__city');
+  let dmsCoordinates = geocode.results[0].annotations.DMS;
+  const latitude = document.querySelector('.map__latitude span');
+  latitude.textContent = dmsCoordinates.lat;
+  const longitude = document.querySelector('.map__longitude span');
+  longitude.textContent = dmsCoordinates.lng;
 
-    let { components } = geocode.results[0];
-    console.log(components);
-    let name = components.city
+  const city = document.querySelector('.weather__city');
+
+  let { components } = geocode.results[0];
+  console.log('address info', components);
+  let name = components.city
     || components.town
     || components.village
     || components.county
     // || components.state_district
     || components.hamlet;
-    city.textContent = `${name}, ${components.country || components.continent}`;
+  city.textContent = `${name}, ${components.country || components.continent}`;
 
-    showCurrentWeather(currentWeather);
-    showForecast(forecast);
+  showCurrentWeather(currentWeather);
+  showForecast(forecast);
 
-    // eslint-disable-next-line no-undef
-    mapboxgl.accessToken = mapboxAccessToken;
-    // eslint-disable-next-line no-undef
-    const map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [currentCoordinates[1], currentCoordinates[0]],
-      zoom: 10,
-    });
-    // eslint-disable-next-line no-undef
-    let marker = new mapboxgl.Marker()
-      .setLngLat([currentCoordinates[1], currentCoordinates[0]])
-      .addTo(map);
+  // eslint-disable-next-line no-undef
+  mapboxgl.accessToken = mapboxAccessToken;
+  // eslint-disable-next-line no-undef
+  const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [currentCoordinates[1], currentCoordinates[0]],
+    zoom: 10,
+  });
+  // eslint-disable-next-line no-undef
+  let marker = new mapboxgl.Marker()
+    .setLngLat([currentCoordinates[1], currentCoordinates[0]])
+    .addTo(map);
 
-    const formSearch = document.querySelector('.search__form');
-    formSearch.addEventListener('submit', async (e) => {
-      e.preventDefault();
+  const formSearch = document.querySelector('.search__form');
+  formSearch.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-      const searchValue = document.querySelector('.search__input').value;
-      geocode = await geocodeByCityName(searchValue);
+    const searchValue = document.querySelector('.search__input').value;
+    formSearch.reset();
+    geocode = await geocodeByCityName(searchValue);
 
+    if (geocode.results.length > 0 && searchValue.length > 2) { // есть ли результаты && валидация
       const { lat, lng } = geocode.results[0].geometry;
 
       currentWeather = await getCurrentWeather([lat, lng]);
@@ -106,20 +115,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       }, 1000);
 
       dmsCoordinates = geocode.results[0].annotations.DMS;
-      // latitude = document.querySelector('.map__latitude span');
       latitude.textContent = dmsCoordinates.lat;
-      // longitude = document.querySelector('.map__longitude span');
       longitude.textContent = dmsCoordinates.lng;
 
       components = geocode.results[0].components;
       name = components.city
-      || components.town
-      || components.village
-      || components.county
-      // || components.state_district
-      || components.hamlet;
+        || components.town
+        || components.village
+        || components.county
+        // || components.state_district
+        || components.hamlet;
       city.textContent = `${name}, ${components.country || components.continent}`;
-      console.log(geocode.results[0].components);
+      console.log('address info', geocode.results[0].components);
 
       showCurrentWeather(currentWeather);
       showForecast(forecast);
@@ -133,8 +140,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         center: [lng, lat],
         essential: true,
       });
-    });
-  } catch (error) {
-    console.log(error);
-  }
+    } else {
+      showErrorPopup('Request is not valid!');
+    }
+  });
 });

@@ -1,9 +1,10 @@
 import { weatherbitApiKey } from './apiKeys';
+import { showErrorPopup } from './errors';
 
 export function fetchData(url) {
   return fetch(url)
     .then((response) => response.json())
-    .catch((error) => console.log(error));
+    .catch((error) => showErrorPopup(error.message));
 }
 
 export async function getCurrentWeather(coordinates) {
