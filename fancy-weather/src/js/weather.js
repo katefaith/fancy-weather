@@ -15,8 +15,8 @@ export async function getCurrentWeather(coordinates) {
 }
 
 export function showCurrentWeather(weatherObj) {
-  // поменять иконки
   const icon = document.querySelector('.weather-today__icon');
+  icon.setAttribute('src', `img/weather-icons/${weatherObj.weather.icon}.svg`);
   icon.setAttribute('alt', weatherObj.weather.icon);
 
   const temperature = document.querySelector('.weather-today__temperature span');
@@ -57,8 +57,9 @@ export function showForecast(forecastObj) {
       });
       weekdays[index - 1].textContent = weekday;
 
-      // поменять иконки
+      icons[index - 1].setAttribute('src', `img/weather-icons/${day.weather.icon}.svg`);
       icons[index - 1].setAttribute('alt', day.weather.icon);
+
       summaries[index - 1].textContent = day.weather.description;
       temperatures[index - 1].textContent = (Math.round(day.temp) > 0) ? `+${Math.round(day.temp)}` : Math.round(day.temp);
     }

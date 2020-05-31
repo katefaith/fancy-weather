@@ -4,10 +4,12 @@ import {
   getForecast,
   showForecast,
 } from './js/weather';
+
 import {
   geocodeByCityName,
   geocodeByCoordinates,
 } from './js/geocode';
+
 import { mapboxAccessToken } from './js/apiKeys';
 
 function getCurrentCoordinates() {
@@ -21,7 +23,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const currentCoordinates = await getCurrentCoordinates();
     let geocode = await geocodeByCoordinates(currentCoordinates);
-    // const { lat, lng } = geocode.results[0].geometry;
 
     let currentWeather = await getCurrentWeather(currentCoordinates);
     let forecast = await getForecast(currentCoordinates);
@@ -76,7 +77,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       geocode = await geocodeByCityName(searchValue);
 
       const { lat, lng } = geocode.results[0].geometry;
-      // console.log('coord', [lat, lng]);
 
       currentWeather = await getCurrentWeather([lat, lng]);
       forecast = await getForecast([lat, lng]);
