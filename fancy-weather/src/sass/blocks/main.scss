@@ -2,9 +2,14 @@
   @include wrapper;
   display: flex;
   justify-content: space-between;
+  transition: opacity 0.2s;
 
   @media (max-width: 1200px) {
     flex-direction: column;
     align-items: center;
   }
+}
+
+.main--opacity {
+  opacity: 0;
 }

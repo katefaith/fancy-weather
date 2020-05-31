@@ -36,8 +36,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   let timezone = geocode.results[0].annotations.timezone.name;
   let dateBlock = document.querySelector('.weather-today__period');
+  let date = new Date().toLocaleString('en', {
+    month: 'long',
+    day: 'numeric',
+    weekday: 'short',
+    timeZone: timezone,
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+  });
+  dateBlock.innerHTML = date;
+
   let timerId = setInterval(() => {
-    const date = new Date().toLocaleString('en', {
+    date = new Date().toLocaleString('en', {
       month: 'long',
       day: 'numeric',
       weekday: 'short',
@@ -84,6 +95,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     .setLngLat([currentCoordinates[1], currentCoordinates[0]])
     .addTo(map);
 
+  document.querySelector('.main').classList.remove('main--opacity');
+
   const formSearch = document.querySelector('.search__form');
   formSearch.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -99,9 +112,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       forecast = await getForecast([lat, lng]);
 
       timezone = geocode.results[0].annotations.timezone.name;
+      date = new Date().toLocaleString('en', {
+        month: 'long',
+        day: 'numeric',
+        weekday: 'short',
+        timeZone: timezone,
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+      });
+      dateBlock.innerHTML = date;
+
       clearInterval(timerId);
       timerId = setInterval(() => {
-        const date = new Date().toLocaleString('en', {
+        date = new Date().toLocaleString('en', {
           month: 'long',
           day: 'numeric',
           weekday: 'short',
