@@ -1,28 +1,18 @@
+import getCurrentCoordinates from './js/getCurrentCoordinates';
 import {
   getCurrentWeather,
   getForecast,
 } from './js/getWeather';
-
 import showData from './js/showData';
-
 import {
   geocodeByCityName,
   geocodeByCoordinates,
 } from './js/geocode';
-
 import { mapboxAccessToken } from './js/apiKeys';
-
 import {
   closeErrorPopup,
   showErrorPopup,
 } from './js/errors';
-
-function getCurrentCoordinates() {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition((pos) => resolve([pos.coords.latitude,
-      pos.coords.longitude]), (err) => reject(err));
-  });
-}
 
 document.addEventListener('DOMContentLoaded', async () => {
   const popupCloseButton = document.querySelector('.popup__close-button');
