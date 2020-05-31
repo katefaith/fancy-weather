@@ -1,9 +1,9 @@
 import {
   getCurrentWeather,
-  showCurrentWeather,
   getForecast,
-  showForecast,
-} from './js/weather';
+} from './js/getWeather';
+
+import showData from './js/showData';
 
 import {
   geocodeByCityName,
@@ -34,53 +34,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   let currentWeather = await getCurrentWeather(currentCoordinates);
   let forecast = await getForecast(currentCoordinates);
 
-  let timezone = geocode.results[0].annotations.timezone.name;
-  let dateBlock = document.querySelector('.weather-today__period');
-  let date = new Date().toLocaleString('en', {
-    month: 'long',
-    day: 'numeric',
-    weekday: 'short',
-    timeZone: timezone,
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-  });
-  dateBlock.innerHTML = date;
+  let timerId = showData(geocode, currentWeather, forecast);
 
-  let timerId = setInterval(() => {
-    date = new Date().toLocaleString('en', {
-      month: 'long',
-      day: 'numeric',
-      weekday: 'short',
-      timeZone: timezone,
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-    });
-    dateBlock.innerHTML = date;
-  }, 1000);
-
-  let dmsCoordinates = geocode.results[0].annotations.DMS;
-  const latitude = document.querySelector('.map__latitude span');
-  latitude.textContent = dmsCoordinates.lat;
-  const longitude = document.querySelector('.map__longitude span');
-  longitude.textContent = dmsCoordinates.lng;
-
-  const city = document.querySelector('.weather__city');
-
-  let { components } = geocode.results[0];
-  console.log('address info', components);
-  let name = components.city
-    || components.town
-    || components.village
-    || components.county
-    // || components.state_district
-    || components.hamlet;
-  city.textContent = `${name}, ${components.country || components.continent}`;
-
-  showCurrentWeather(currentWeather);
-  showForecast(forecast);
-
+  // create map
   // eslint-disable-next-line no-undef
   mapboxgl.accessToken = mapboxAccessToken;
   // eslint-disable-next-line no-undef
@@ -97,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.querySelector('.main').classList.remove('main--opacity');
 
+  // search
   const formSearch = document.querySelector('.search__form');
   formSearch.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -105,56 +62,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     formSearch.reset();
     geocode = await geocodeByCityName(searchValue);
 
-    if (geocode.results.length > 0 && searchValue.length > 2) { // есть ли результаты && валидация
+    // if there are some results && validation
+    if (geocode.results.length > 0 && searchValue.length > 2) {
       const { lat, lng } = geocode.results[0].geometry;
 
       currentWeather = await getCurrentWeather([lat, lng]);
       forecast = await getForecast([lat, lng]);
 
-      timezone = geocode.results[0].annotations.timezone.name;
-      date = new Date().toLocaleString('en', {
-        month: 'long',
-        day: 'numeric',
-        weekday: 'short',
-        timeZone: timezone,
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-      });
-      dateBlock.innerHTML = date;
-
       clearInterval(timerId);
-      timerId = setInterval(() => {
-        date = new Date().toLocaleString('en', {
-          month: 'long',
-          day: 'numeric',
-          weekday: 'short',
-          timeZone: timezone,
-          hour: 'numeric',
-          minute: 'numeric',
-          second: 'numeric',
-        });
-        dateBlock = document.querySelector('.weather-today__period');
-        dateBlock.innerHTML = date;
-      }, 1000);
+      timerId = showData(geocode, currentWeather, forecast);
 
-      dmsCoordinates = geocode.results[0].annotations.DMS;
-      latitude.textContent = dmsCoordinates.lat;
-      longitude.textContent = dmsCoordinates.lng;
-
-      components = geocode.results[0].components;
-      name = components.city
-        || components.town
-        || components.village
-        || components.county
-        // || components.state_district
-        || components.hamlet;
-      city.textContent = `${name}, ${components.country || components.continent}`;
-      console.log('address info', geocode.results[0].components);
-
-      showCurrentWeather(currentWeather);
-      showForecast(forecast);
-
+      // change map
       marker.remove();
       // eslint-disable-next-line no-undef
       marker = new mapboxgl.Marker()

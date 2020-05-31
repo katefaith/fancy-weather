@@ -1,21 +1,27 @@
-import { weatherbitApiKey } from './apiKeys';
-import { showErrorPopup } from './errors';
+function showCoordinates(geocode) {
+  const dmsCoordinates = geocode.results[0].annotations.DMS;
 
-export function fetchData(url) {
-  return fetch(url)
-    .then((response) => response.json())
-    .catch((error) => showErrorPopup(error.message));
+  const latitude = document.querySelector('.map__latitude span');
+  latitude.textContent = dmsCoordinates.lat;
+  const longitude = document.querySelector('.map__longitude span');
+  longitude.textContent = dmsCoordinates.lng;
 }
 
-export async function getCurrentWeather(coordinates) {
-  const [latitude, longitude] = coordinates;
-  const currentWeatherUrl = `https://api.weatherbit.io/v2.0/current?lat=${latitude}&lon=${longitude}&lang=en&key=${weatherbitApiKey}`;
-
-  const weather = await fetchData(currentWeatherUrl);
-  return weather.data[0];
+function showCityName(geocode) {
+  const city = document.querySelector('.weather__city');
+  const { components } = geocode.results[0];
+  console.log('address info', components);
+  const cityName = components.city
+    || components.town
+    || components.village
+    || components.county
+    // || components.state_district
+    || components.hamlet
+    || components.state;
+  city.textContent = `${cityName}, ${components.country || components.continent}`;
 }
 
-export function showCurrentWeather(weatherObj) {
+function showCurrentWeather(weatherObj) {
   const icon = document.querySelector('.weather-today__icon');
   icon.setAttribute('src', `img/weather-icons/${weatherObj.weather.icon}.svg`);
   icon.setAttribute('alt', weatherObj.weather.icon);
@@ -36,15 +42,7 @@ export function showCurrentWeather(weatherObj) {
   humidity.textContent = weatherObj.rh;
 }
 
-export async function getForecast(coordinates) {
-  const [latitude, longitude] = coordinates;
-  const url = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${latitude}&lon=${longitude}&days=4&lang=en&key=${weatherbitApiKey}`;
-
-  const forecast = await fetchData(url);
-  return forecast;
-}
-
-export function showForecast(forecastObj) {
+function showForecast(forecastObj) {
   const weekdays = document.querySelectorAll('.weather-forecast__weekday');
   const icons = document.querySelectorAll('.weather-forecast__icon');
   const summaries = document.querySelectorAll('.weather-forecast__summary');
@@ -65,4 +63,46 @@ export function showForecast(forecastObj) {
       temperatures[index - 1].textContent = (Math.round(day.temp) > 0) ? `+${Math.round(day.temp)}` : Math.round(day.temp);
     }
   });
+}
+
+function showDateAndTime(geocode) {
+  const timezone = geocode.results[0].annotations.timezone.name;
+  const dateBlock = document.querySelector('.weather-today__period');
+  let date = new Date().toLocaleString('en', {
+    month: 'long',
+    day: 'numeric',
+    weekday: 'short',
+    timeZone: timezone,
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+  });
+  dateBlock.innerHTML = date;
+
+  const timerId = setInterval(() => {
+    date = new Date().toLocaleString('en', {
+      month: 'long',
+      day: 'numeric',
+      weekday: 'short',
+      timeZone: timezone,
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+    });
+    dateBlock.innerHTML = date;
+  }, 1000);
+
+  return timerId;
+}
+
+export default function showData(geocode, currentWeather, forecast) {
+  showCoordinates(geocode);
+  showCityName(geocode);
+  const timerId = showDateAndTime(geocode);
+
+  console.log('current weather', currentWeather);
+  showCurrentWeather(currentWeather);
+  showForecast(forecast);
+
+  return timerId;
 }

@@ -1,5 +1,5 @@
 import { opencagedataApiKey } from './apiKeys';
-import { fetchData } from './weather';
+import fetchData from './fetchData';
 
 export async function geocodeByCityName(cityName) {
   const url = `https://api.opencagedata.com/geocode/v1/json?key=${opencagedataApiKey}&language=en&q=${cityName}`;
