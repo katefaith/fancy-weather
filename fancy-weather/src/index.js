@@ -13,10 +13,33 @@ import {
   closeErrorPopup,
   showErrorPopup,
 } from './js/errors';
+import {
+  сelsiusToFahrenheit,
+  fahrenheitToCelsius,
+  recalcTemperature,
+} from './js/recalcTemperature';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const popupCloseButton = document.querySelector('.popup__close-button');
   popupCloseButton.addEventListener('click', closeErrorPopup);
+
+  const fahrenheitRadio = document.querySelector('#fahrenheit');
+  const сelsiusRadio = document.querySelector('#сelsius');
+  const units = localStorage.getItem('units');
+  if (units === 'F') {
+    fahrenheitRadio.setAttribute('checked', '');
+    сelsiusRadio.removeAttribute('checked');
+  }
+
+  fahrenheitRadio.addEventListener('change', () => {
+    recalcTemperature(сelsiusToFahrenheit);
+    localStorage.setItem('units', 'F');
+  });
+
+  сelsiusRadio.addEventListener('change', () => {
+    recalcTemperature(fahrenheitToCelsius);
+    localStorage.setItem('units', 'C');
+  });
 
   const currentCoordinates = await getCurrentCoordinates();
   let geocode = await geocodeByCoordinates(currentCoordinates);

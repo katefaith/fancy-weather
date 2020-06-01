@@ -1,3 +1,5 @@
+import { сelsiusToFahrenheit } from './recalcTemperature';
+
 function showCoordinates(geocode) {
   const dmsCoordinates = geocode.results[0].annotations.DMS;
 
@@ -21,19 +23,23 @@ function showCityName(geocode) {
   city.textContent = `${cityName}, ${components.country || components.continent}`;
 }
 
-function showCurrentWeather(weatherObj) {
+function showCurrentWeather(weatherObj, units) {
   const icon = document.querySelector('.weather-today__icon');
   icon.setAttribute('src', `img/weather-icons/${weatherObj.weather.icon}.svg`);
   icon.setAttribute('alt', weatherObj.weather.icon);
 
-  const temperature = document.querySelector('.weather-today__temperature span');
-  temperature.textContent = (Math.round(weatherObj.temp) > 0) ? `+${Math.round(weatherObj.temp)}` : Math.round(weatherObj.temp);
+  const temperature = document.querySelector('.weather-today__temperature');
+  const temp = (units === 'F') ? сelsiusToFahrenheit(Math.round(weatherObj.temp)) : Math.round(weatherObj.temp);
+  temperature.innerHTML = (temp > 0) ? `<span>+${temp}</span>°` : `<span>${temp}</span>°`;
 
   const summary = document.querySelector('.weather-today__summary');
   summary.textContent = weatherObj.weather.description;
 
   const feelsLike = document.querySelector('.weather-today__feels-like span');
-  feelsLike.textContent = (Math.round(weatherObj.app_temp) > 0) ? `+${Math.round(weatherObj.app_temp)}` : Math.round(weatherObj.app_temp);
+  const appTemp = (units === 'F') ? сelsiusToFahrenheit(Math.round(weatherObj.app_temp)) : Math.round(weatherObj.app_temp);
+  feelsLike.innerHTML = (appTemp > 0)
+    ? `+${appTemp}`
+    : appTemp;
 
   const wind = document.querySelector('.weather-today__wind span');
   wind.textContent = weatherObj.wind_spd.toFixed(1);
@@ -42,11 +48,11 @@ function showCurrentWeather(weatherObj) {
   humidity.textContent = weatherObj.rh;
 }
 
-function showForecast(forecastObj) {
+function showForecast(forecastObj, units) {
   const weekdays = document.querySelectorAll('.weather-forecast__weekday');
   const icons = document.querySelectorAll('.weather-forecast__icon');
   const summaries = document.querySelectorAll('.weather-forecast__summary');
-  const temperatures = document.querySelectorAll('.weather-forecast__temperature span');
+  const temperatures = document.querySelectorAll('.weather-forecast__temperature');
 
   forecastObj.data.forEach((day, index) => {
     if (index > 0) {
@@ -60,7 +66,8 @@ function showForecast(forecastObj) {
       icons[index - 1].setAttribute('alt', day.weather.icon);
 
       summaries[index - 1].textContent = day.weather.description;
-      temperatures[index - 1].textContent = (Math.round(day.temp) > 0) ? `+${Math.round(day.temp)}` : Math.round(day.temp);
+      const temp = (units === 'F') ? сelsiusToFahrenheit(Math.round(day.temp)) : Math.round(day.temp);
+      temperatures[index - 1].innerHTML = (temp > 0) ? `<span>+${temp}</span>°` : `<span>${temp}</span>°`;
     }
   });
 }
@@ -101,8 +108,11 @@ export default function showData(geocode, currentWeather, forecast) {
   const timerId = showDateAndTime(geocode);
 
   console.log('current weather', currentWeather);
-  showCurrentWeather(currentWeather);
-  showForecast(forecast);
+  console.log('forecast', forecast);
+
+  const units = localStorage.getItem('units');
+  showCurrentWeather(currentWeather, units);
+  showForecast(forecast, units);
 
   return timerId;
 }
