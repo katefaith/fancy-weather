@@ -20,10 +20,9 @@
 }
 
 .map__scheme {
+  clip-path: polygon(5% 0, 95% 0, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0 95%, 0 5%);
   width: 400px;
   height: 500px;
-  border-radius: 10px;
-  overflow: hidden;
 
   @media (max-width: 1200px) {
     width: 100%;
