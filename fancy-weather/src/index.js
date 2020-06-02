@@ -18,6 +18,7 @@ import {
   fahrenheitToCelsius,
   recalcTemperature,
 } from './js/recalcTemperature';
+import changeBackground from './js/changeBackground';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const popupCloseButton = document.querySelector('.popup__close-button');
@@ -47,6 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let currentWeather = await getCurrentWeather(currentCoordinates);
   let forecast = await getForecast(currentCoordinates);
 
+  await changeBackground(geocode);
   let timerId = showData(geocode, currentWeather, forecast);
 
   // create map
@@ -66,6 +68,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.querySelector('.main').classList.remove('main--opacity');
 
+  // change bg on click
+  const changeBgButton = document.querySelector('.controls__bg-update');
+  changeBgButton.addEventListener('click', () => changeBackground(geocode));
+
   // search
   const formSearch = document.querySelector('.search__form');
   formSearch.addEventListener('submit', async (e) => {
@@ -81,6 +87,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       currentWeather = await getCurrentWeather([lat, lng]);
       forecast = await getForecast([lat, lng]);
+
+      await changeBackground(geocode);
 
       clearInterval(timerId);
       timerId = showData(geocode, currentWeather, forecast);

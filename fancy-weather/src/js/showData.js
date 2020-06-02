@@ -17,7 +17,6 @@ function showCityName(geocode) {
     || components.town
     || components.village
     || components.county
-    // || components.state_district
     || components.hamlet
     || components.state;
   city.textContent = `${cityName}, ${components.country || components.continent}`;
