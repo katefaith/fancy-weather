@@ -5,12 +5,12 @@
   height: 100%;
   cursor: pointer;
   padding: 10px 15px;
-	border: 1px solid #999;
+  border: 1px solid #999;
   user-select: none;
   text-transform: uppercase;
 
   &:hover {
-    background: rgba($color: white, $alpha: 0.3);
+    animation: change-background 1.5s ease-in-out infinite;
   }
 
   @media (max-width: 600px) {

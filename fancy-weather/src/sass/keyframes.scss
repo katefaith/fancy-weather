@@ -1,0 +1,17 @@
+@keyframes rotate {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes change-background {
+  0% {
+    background: transparent;
+  }
+  50% {
+    background: rgba($color: white, $alpha: 0.3);
+  }
+  100% {
+    background: transparent;
+  }
+}

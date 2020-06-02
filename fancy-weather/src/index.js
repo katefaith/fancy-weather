@@ -70,7 +70,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // change bg on click
   const changeBgButton = document.querySelector('.controls__bg-update');
-  changeBgButton.addEventListener('click', () => changeBackground(geocode));
+  changeBgButton.addEventListener('click', async () => {
+    changeBgButton.querySelector('img').classList.add('rotate');
+    await changeBackground(geocode);
+    changeBgButton.querySelector('img').classList.remove('rotate');
+  });
 
   // search
   const formSearch = document.querySelector('.search__form');

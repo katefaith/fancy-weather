@@ -25,4 +25,5 @@
 
 .radio-group input[type=radio]:checked + label:hover {
   cursor: default;
+  animation: none;
 }
