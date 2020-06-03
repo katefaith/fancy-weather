@@ -20,6 +20,7 @@ import {
 } from './js/recalcTemperature';
 import { changeBackground } from './js/changeBackground';
 
+
 document.addEventListener('DOMContentLoaded', async () => {
   const popupCloseButton = document.querySelector('.popup__close-button');
   popupCloseButton.addEventListener('click', closeErrorPopup);
@@ -42,38 +43,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     localStorage.setItem('units', 'C');
   });
 
-  const currentCoordinates = await getCurrentCoordinates();
-  let geocode = await geocodeByCoordinates(currentCoordinates);
-
-  let currentWeather = await getCurrentWeather(currentCoordinates);
-  let forecast = await getForecast(currentCoordinates);
-
-  await changeBackground(geocode);
-  let timerId = showData(geocode, currentWeather, forecast);
-
-  // create map
-  // eslint-disable-next-line no-undef
-  mapboxgl.accessToken = mapboxAccessToken;
-  // eslint-disable-next-line no-undef
-  const map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/streets-v11',
-    center: [currentCoordinates[1], currentCoordinates[0]],
-    zoom: 10,
-  });
-  // eslint-disable-next-line no-undef
-  let marker = new mapboxgl.Marker()
-    .setLngLat([currentCoordinates[1], currentCoordinates[0]])
-    .addTo(map);
-
-  document.querySelector('.main').classList.remove('main--opacity');
+  let geocode;
+  let currentWeather;
+  let forecast;
+  let timerId;
+  let map;
+  let marker;
 
   // change bg on click
   const changeBgButton = document.querySelector('.controls__bg-update');
   changeBgButton.addEventListener('click', async () => {
-    changeBgButton.querySelector('img').classList.add('rotate');
-    await changeBackground(geocode);
-    changeBgButton.querySelector('img').classList.remove('rotate');
+    if (geocode) {
+      changeBgButton.querySelector('img').classList.add('rotate');
+      await changeBackground(geocode);
+      changeBgButton.querySelector('img').classList.remove('rotate');
+    }
   });
 
   // search
@@ -98,17 +82,56 @@ document.addEventListener('DOMContentLoaded', async () => {
       timerId = showData(geocode, currentWeather, forecast);
 
       // change map
-      marker.remove();
-      // eslint-disable-next-line no-undef
-      marker = new mapboxgl.Marker()
-        .setLngLat([lng, lat])
-        .addTo(map);
-      map.flyTo({
-        center: [lng, lat],
-        essential: true,
-      });
+      if (marker) marker.remove();
+      if (map) {
+        map.flyTo({
+          center: [lng, lat],
+          essential: true,
+        });
+      } else {
+        // create map
+        // eslint-disable-next-line no-undef
+        mapboxgl.accessToken = mapboxAccessToken;
+        // eslint-disable-next-line no-undef
+        map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/streets-v11',
+          center: [lng, lat],
+          zoom: 10,
+        });
+        // eslint-disable-next-line no-undef
+        marker = new mapboxgl.Marker()
+          .setLngLat([lng, lat])
+          .addTo(map);
+      }
+      document.querySelector('.main').classList.remove('main--opacity');
     } else {
       showErrorPopup('Request is not valid!');
     }
   });
+
+  const currentCoordinates = await getCurrentCoordinates();
+  geocode = await geocodeByCoordinates(currentCoordinates);
+
+  currentWeather = await getCurrentWeather(currentCoordinates);
+  forecast = await getForecast(currentCoordinates);
+
+  await changeBackground(geocode);
+  timerId = showData(geocode, currentWeather, forecast);
+
+  // eslint-disable-next-line no-undef
+  mapboxgl.accessToken = mapboxAccessToken;
+  // eslint-disable-next-line no-undef
+  map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [currentCoordinates[1], currentCoordinates[0]],
+    zoom: 10,
+  });
+  // eslint-disable-next-line no-undef
+  marker = new mapboxgl.Marker()
+    .setLngLat([currentCoordinates[1], currentCoordinates[0]])
+    .addTo(map);
+
+  document.querySelector('.main').classList.remove('main--opacity');
 });

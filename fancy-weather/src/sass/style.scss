@@ -20,7 +20,8 @@ html {
 }
 
 body {
-  background: linear-gradient(rgba($color: black, $alpha: 0.6), rgba($color: black, $alpha: 0.7)) fixed;
+  background: linear-gradient(rgba($color: black, $alpha: 0.6), rgba($color: black, $alpha: 0.7)) fixed,
+  url("https://images.unsplash.com/photo-1491036775913-3fbc5c455842?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjEzOTA1NX0") center / cover fixed;
   font-size: 2rem;
   color: white;
 
