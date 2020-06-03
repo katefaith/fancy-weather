@@ -18,7 +18,7 @@ import {
   fahrenheitToCelsius,
   recalcTemperature,
 } from './js/recalcTemperature';
-import changeBackground from './js/changeBackground';
+import { changeBackground } from './js/changeBackground';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const popupCloseButton = document.querySelector('.popup__close-button');

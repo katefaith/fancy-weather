@@ -13,14 +13,14 @@ async function getLinkToImage(...args) {
   }
 }
 
-function defineTimeOfDay(hours) {
+export function defineTimeOfDay(hours) {
   if (hours >= 6 && hours < 12) return 'morning';
   if (hours >= 12 && hours < 18) return 'day';
   if (hours >= 18 && hours < 24) return 'evening';
   return 'night';
 }
 
-function defineSeason(month, latitude) {
+export function defineSeason(month, latitude) {
   // for the Northern hemisphere
   if (latitude > 0) {
     if (month >= 3 && month <= 5) return 'spring';
@@ -36,7 +36,7 @@ function defineSeason(month, latitude) {
   return 'summer';
 }
 
-export default async function changeBackground(geocode) {
+export async function changeBackground(geocode) {
   const timezone = geocode.results[0].annotations.timezone.name;
   const latitude = geocode.results[0].geometry.lat;
   const hours = new Date().toLocaleString('ru', { hour: 'numeric', timeZone: timezone });

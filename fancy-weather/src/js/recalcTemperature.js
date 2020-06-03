@@ -9,8 +9,8 @@ export function fahrenheitToCelsius(fahrenheit) {
 export function recalcTemperature(func) {
   // current weather
   const currTemp = document.querySelector('.weather-today__temperature span');
-  const nerCurrTemp = func(Number(currTemp.textContent));
-  currTemp.textContent = nerCurrTemp;
+  const newCurrTemp = func(Number(currTemp.textContent));
+  currTemp.textContent = newCurrTemp;
 
   const fillsLikeTemp = document.querySelector('.weather-today__feels-like span');
   const newFillsLikeTemp = func(Number(fillsLikeTemp.textContent));
