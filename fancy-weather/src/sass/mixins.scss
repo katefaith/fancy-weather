@@ -1,0 +1,31 @@
+@mixin button {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  cursor: pointer;
+  padding: 10px 15px;
+  border: 1px solid #999;
+  user-select: none;
+  text-transform: uppercase;
+
+  &:hover {
+    animation: change-background 1.5s ease-in-out infinite;
+  }
+
+  @media (max-width: 600px) {
+    padding: 8px 12px;
+  }
+}
+
+@mixin wrapper {
+  box-sizing: border-box;
+  max-width: 1400px;
+  padding: 0 40px;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media (max-width: 600px) {
+    padding: 0 15px;
+  }
+}

@@ -1,0 +1,29 @@
+.radio-group {
+  display: flex;
+	overflow: hidden;
+}
+
+.radio-group input[type=radio] {
+	display: none;
+}
+.radio-group label {
+  @include button;
+  border-right: none;
+}
+
+.radio-group .radio-group__item:first-child label {
+	border-radius: 6px 0 0 6px;
+}
+.radio-group .radio-group__item:last-child label {
+	border-radius: 0 6px 6px 0;
+	border-right: 1px solid #999;
+}
+
+.radio-group input[type=radio]:checked + label {
+	background: rgba($color: gray, $alpha: 0.3);
+}
+
+.radio-group input[type=radio]:checked + label:hover {
+  cursor: default;
+  animation: none;
+}
