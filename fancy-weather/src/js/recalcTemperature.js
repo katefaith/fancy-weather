@@ -10,11 +10,11 @@ export function recalcTemperature(func) {
   // current weather
   const currTemp = document.querySelector('.weather-today__temperature span');
   const newCurrTemp = func(Number(currTemp.textContent));
-  currTemp.textContent = newCurrTemp;
+  currTemp.textContent = (newCurrTemp > 0) ? `+${newCurrTemp}` : newCurrTemp;
 
   const fillsLikeTemp = document.querySelector('.weather-today__feels-like span');
   const newFillsLikeTemp = func(Number(fillsLikeTemp.textContent));
-  fillsLikeTemp.textContent = newFillsLikeTemp;
+  fillsLikeTemp.textContent = (newFillsLikeTemp > 0) ? `+${newFillsLikeTemp}` : newFillsLikeTemp;
 
   // forecast
   const days = document.querySelectorAll('.weather-forecast__day');
